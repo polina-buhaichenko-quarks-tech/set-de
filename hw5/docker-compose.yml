@@ -1,0 +1,54 @@
+services:
+
+  mysql:
+    image: mysql:8.0
+    container_name: hw5_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: ad_analytics
+      MYSQL_USER: aduser
+      MYSQL_PASSWORD: adpass
+    ports:
+      - "3307:3306"        # host:3307 → container:3306 (avoids local MySQL clash)
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpass"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+  redis:
+    image: redis:7.2-alpine
+    container_name: hw5_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build: .
+    container_name: hw5_api
+    ports:
+      - "8000:8000"
+    environment:
+      DB_HOST: mysql
+      DB_PORT: 3306          # internal Docker network port
+      DB_NAME: ad_analytics
+      DB_USER: aduser
+      DB_PASSWORD: adpass
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
