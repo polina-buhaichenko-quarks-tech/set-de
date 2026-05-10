@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  generator:
+    build: ./generator
+    container_name: wiki-generator
+    networks:
+      - hw10-network
+    restart: unless-stopped
+
+networks:
+  hw10-network:
+    external: true

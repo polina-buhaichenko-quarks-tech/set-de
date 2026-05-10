@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  cassandra:
+    image: cassandra:4.1
+    container_name: cassandra
+    hostname: cassandra
+    ports:
+      - "9042:9042"
+    environment:
+      - CASSANDRA_CLUSTER_NAME=WikiCluster
+      - CASSANDRA_DC=dc1
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - cassandra-data:/var/lib/cassandra
+    networks:
+      - hw10-network
+    healthcheck:
+      test: ["CMD-SHELL", "cqlsh -e 'describe keyspaces' || exit 1"]
+      interval: 30s
+      timeout: 30s
+      retries: 10
+      start_period: 60s
+
+  cassandra-init:
+    image: cassandra:4.1
+    container_name: cassandra-init
+    depends_on:
+      cassandra:
+        condition: service_healthy
+    volumes:
+      - ./cassandra-init:/init
+    command: >
+      bash -c "
+        until cqlsh cassandra -e 'describe keyspaces'; do
+          echo 'Waiting for Cassandra to be ready...'
+          sleep 5
+        done &&
+        cqlsh cassandra -f /init/init.cql &&
+        echo 'Cassandra schema initialized'
+      "
+    networks:
+      - hw10-network
+    restart: "no"
+
+volumes:
+  cassandra-data:
+
+networks:
+  hw10-network:
+    external: true
