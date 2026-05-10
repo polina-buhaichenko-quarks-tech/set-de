@@ -29,7 +29,7 @@ CFG = dict(
     host=os.getenv("DB_HOST", "localhost"),
     port=int(os.getenv("DB_PORT", 3307)),
     database=os.getenv("DB_NAME", "ad_analytics"),
-    user=os.getenv("DB_USER", "aduser"),
+    user=os.getenv("DB_USER", "polinus"),
     password=os.getenv("DB_PASSWORD", "adpass"),
 )
 

@@ -1,12 +1,7 @@
+CREATE DATABASE IF NOT EXISTS polinus_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE polinus_db;
 
--- ─────────────────────────────────────────────────────────────────────────────
--- AdTech normalised schema  (fixed version of hw1/ddl.sql)
--- ─────────────────────────────────────────────────────────────────────────────
-
-CREATE DATABASE IF NOT EXISTS adtech CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE adtech;
-
--- ── dictionaries ──────────────────────────────────────────────────────────────
+--dictionaries
 
 CREATE TABLE IF NOT EXISTS locations (
     country_id   INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -36,7 +31,7 @@ CREATE TABLE IF NOT EXISTS ad_slot_sizes (
     height  INT UNSIGNED
 );
 
--- ── core ──────────────────────────────────────────────────────────────────────
+-- core
 
 CREATE TABLE IF NOT EXISTS campaigns (
     campaign_id       INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
@@ -62,7 +57,7 @@ CREATE TABLE IF NOT EXISTS users (
     CONSTRAINT fk_user_location FOREIGN KEY (country_id) REFERENCES locations(country_id)
 );
 
--- ── junction ──────────────────────────────────────────────────────────────────
+-- junction
 
 CREATE TABLE IF NOT EXISTS user_interests (
     user_id     INT UNSIGNED NOT NULL,
@@ -72,7 +67,7 @@ CREATE TABLE IF NOT EXISTS user_interests (
     CONSTRAINT fk_ui_interest FOREIGN KEY (interest_id) REFERENCES interests(interest_id) ON DELETE CASCADE
 );
 
--- ── events (fact table) ───────────────────────────────────────────────────────
+-- events
 
 CREATE TABLE IF NOT EXISTS ad_events (
     event_id        CHAR(36)       PRIMARY KEY,
@@ -92,14 +87,9 @@ CREATE TABLE IF NOT EXISTS ad_events (
     CONSTRAINT fk_event_device   FOREIGN KEY (device_id)   REFERENCES devices(device_id)
 );
 
--- ─────────────────────────────────────────────────────────────────────────────
--- Performance indexes
---
--- ad_events has ~10 M rows; all analytical queries filter on timestamp and join
--- on campaign_id, device_id, location_id, or user_id.  InnoDB creates implicit
--- single-column indexes for FK columns, but the composite indexes below turn
--- multi-condition scans into index-only range lookups.
--- ─────────────────────────────────────────────────────────────────────────────
+
+-- indexes
+
 
 -- Q1 / Q3: CTR and CPC/CPM per campaign inside a time window
 CREATE INDEX idx_ae_campaign_ts    ON ad_events (campaign_id, timestamp);

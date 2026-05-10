@@ -1,11 +1,11 @@
 services:
   mysql:
     image: mysql:8.0
-    container_name: adtech_mysql
+    container_name: polinus_db_mysql
     environment:
       MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: adtech
-      MYSQL_USER: aduser
+      MYSQL_DATABASE: polinus_db
+      MYSQL_USER: polinus
       MYSQL_PASSWORD: adpassword
     ports:
       - "3306:3306"

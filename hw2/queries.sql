@@ -1,12 +1,6 @@
--- ─────────────────────────────────────────────────────────────────────────────
--- AdTech analytical queries  –  Homework 2
---
--- Analysis window: 2024-10-01 … 2024-10-31  (inclusive, October 2024)
--- The same window is used for every time-scoped question (Q1–Q5, Q7).
--- Q6 (budget consumption) operates on all-time spend data.
--- ─────────────────────────────────────────────────────────────────────────────
+-- 2024-10-01 … 2024-10-31
 
--- ── Q1: Top 5 campaigns by Click-Through Rate ─────────────────────────────────
+-- Q1: Top 5 campaigns by CTR
 -- Which campaigns are the most effective at driving user engagement?
 -- CTR = clicks / impressions × 100.  Campaigns with fewer than 100 impressions
 -- are excluded to avoid statistical noise from tiny samples.
@@ -28,7 +22,7 @@ ORDER BY  ctr_pct DESC
 LIMIT 5;
 
 
--- ── Q2: Advertiser spending & engagement ──────────────────────────────────────
+-- Q2: Advertiser spending & engagement
 -- Which advertisers are the biggest spenders, and does higher spend correlate
 -- with more clicks?
 
@@ -48,7 +42,7 @@ ORDER BY  total_spend DESC
 LIMIT 10;
 
 
--- ── Q3: Cost Per Click (CPC) and Cost Per Mille (CPM) per campaign ────────────
+-- Q3: Cost Per Click (CPC) and Cost Per Mille (CPM) per campaign
 -- How efficiently is each campaign spending its budget?
 -- CPC  = total_cost / clicks
 -- CPM  = total_cost / impressions × 1 000
@@ -70,7 +64,7 @@ GROUP BY  c.campaign_id, c.campaign_name, a.name
 ORDER BY  cpc ASC;
 
 
--- ── Q4: Top locations by ad revenue from clicks ───────────────────────────────
+-- Q4: Top locations by ad revenue from clicks
 -- Where in the world do ads generate the highest revenue?
 -- Only events where the ad was actually clicked contribute revenue.
 
@@ -88,7 +82,7 @@ ORDER BY  total_revenue DESC
 LIMIT 10;
 
 
--- ── Q5: Top 10 most engaged users ─────────────────────────────────────────────
+-- Q5: Top 10 most engaged users
 -- Which users clicked the most ads during the analysis period?
 
 SELECT
@@ -108,7 +102,7 @@ ORDER BY  total_clicks DESC
 LIMIT 10;
 
 
--- ── Q6: Campaigns close to budget exhaustion (all-time) ───────────────────────
+-- Q6: Campaigns close to budget exhaustion (all-time)
 -- Which campaigns have consumed more than 80 % of their total budget?
 -- Uses cumulative ad_cost from all events, not limited to the 30-day window,
 -- because budget depletion is a campaign-lifetime metric.
@@ -128,7 +122,7 @@ HAVING    pct_budget_spent > 80
 ORDER BY  pct_budget_spent DESC;
 
 
--- ── Q7: CTR by device type ────────────────────────────────────────────────────
+-- Q7: CTR by device type
 -- Do mobile, desktop, or tablet users engage more with ads?
 -- Helps advertisers decide where to concentrate creative effort.
 

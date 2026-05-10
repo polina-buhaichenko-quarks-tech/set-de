@@ -6,7 +6,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: rootpass
       MYSQL_DATABASE: ad_analytics
-      MYSQL_USER: aduser
+      MYSQL_USER: polinus
       MYSQL_PASSWORD: adpass
     ports:
       - "3307:3306"        # host:3307 → container:3306 (avoids local MySQL clash)
@@ -40,7 +40,7 @@ services:
       DB_HOST: mysql
       DB_PORT: 3306          # internal Docker network port
       DB_NAME: ad_analytics
-      DB_USER: aduser
+      DB_USER: polinus
       DB_PASSWORD: adpass
       REDIS_HOST: redis
       REDIS_PORT: 6379
